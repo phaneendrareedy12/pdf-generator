@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -18,9 +19,7 @@ public class PDFController {
     private PDFService pdfService;
 
     @GetMapping("/")
-    public ResponseEntity<?> generatePdf() throws FileNotFoundException, DocumentException {
-
-        List<String> tableHeaders = List.of("", "", "", "", "", "");
+    public ResponseEntity<?> generatePdf() throws IOException, DocumentException {
 
         pdfService.generateRequiredPdf();
 

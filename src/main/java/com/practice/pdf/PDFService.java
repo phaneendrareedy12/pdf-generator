@@ -5,33 +5,47 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.LineSeparator;
 import org.springframework.stereotype.Service;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class PDFService {
 
-    public void generateRequiredPdf() throws FileNotFoundException, DocumentException {
+    public void generateRequiredPdf() throws IOException, DocumentException {
 
         List<Header> headersList = getHeaders();
         generatePdf("TransSchedule.pdf", headersList, getTrainData());
     }
 
 
-    private void generatePdf(String pdfName, List<Header> headersList, List<TrainData> trainData) throws FileNotFoundException, DocumentException {
+    private void generatePdf(String pdfName, List<Header> headersList, List<TrainData> trainData) throws IOException, DocumentException {
 
-        Document document = new Document();
+        Document document = new Document(PageSize.A3, 1, 1, 5, 5);
         PdfWriter.getInstance(document, new FileOutputStream(pdfName));
 
         document.open();
 
+        document.add(new LineSeparator());
+        document.add( new Paragraph( "                                                                                  "
+                + "                                                                                     NS Customized Reporting - Enroute Trains" ) );
+        document.add(new LineSeparator());
+        document.add( new Paragraph( "  "));
+        Image img = Image.getInstance("img.png");
+        document.add(img);
+        document.add( new Paragraph( "  "));
+        document.add( new Paragraph( "                                                                                            Enroute Trains"));
+        document.add( new Paragraph( "  "));
         PdfPTable table = new PdfPTable(12);
+        table.setWidthPercentage(97);
+        table.setPaddingTop(10f);
         table.setTotalWidth(100);
-        table.setWidths(new int[]{5,5,5,5,5,5,5,5,5,15,15,15});
+        table.setWidths(new int[]{5,4,6,10,7,14,5,15,20,18,18,18});
         addTableHeader(table, headersList);
         addRows(table, trainData);
 
@@ -138,7 +152,7 @@ public class PDFService {
 
     private PdfPCell addCell(String text) {
 
-        Font font = new Font(Font.FontFamily.COURIER, 8);
+        Font font = new Font(Font.FontFamily.UNDEFINED, 7);
         PdfPCell cell = new PdfPCell();
         cell.setBorder(Rectangle.NO_BORDER);
         cell.setPhrase(new Phrase(text, font));
